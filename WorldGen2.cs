@@ -10,6 +10,10 @@ public class WorldGen2 : MonoBehaviour {
     public int scale = 5;
     public int width = 60;
     public int hight = 1500;
+    public double coalGradiant = .2;
+    public double DirtGradiant = .4;
+    public double stoneGradiant = .4;
+    public double ironGradiant = .75; //backwards
 
     public int MountanSeed = 225;
     public int mountanScale = 2;
@@ -48,15 +52,15 @@ public class WorldGen2 : MonoBehaviour {
                 ironNoise = Mathf.PerlinNoise(xCoord + UnityEngine.Random.Range(0,100) + seed, yCoord + UnityEngine.Random.Range(0, 100) + seed);
                 //noise
                 Vector3Int position = new Vector3Int(x, y, 0);
-                if (noise > .4){
+                if (noise > stoneGradiant){
                     Tilemap.SetTile(position, Stonetile);
-                } if (noise < .4){
+                } if (noise < DirtGradiant){
                     Tilemap.SetTile(position, Dirttile);
-                } if (noise < .2){
+                } if (noise < coalGradiant){
                     Tilemap.SetTile(position, Coaltile);
                 }
                 //iron noise
-                if (noise > .75){
+                if (noise > ironGradiant){
                     Tilemap.SetTile(position, Irontile);
                 }
             }
@@ -69,7 +73,7 @@ public class WorldGen2 : MonoBehaviour {
             for (int y = hight; y < mountanHight; y++){
                 float xCoord = (float)x / mountanWidth * mountanScale;
                 float yCoord = (float)y / mountanHight * mountanScale;
-                noise = yCoord * Mathf.PerlinNoise(xCoord, 0f);
+                noise = yCoord * Mathf.PerlinNoise(xCoord + MountanSeed, 0f);
                 //print(noise * hight / mountanHight);
                 if (noise * hight / mountanHight < .5){
                     Vector3Int position = new Vector3Int(x, y, 0);
