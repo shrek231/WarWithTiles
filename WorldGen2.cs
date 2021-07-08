@@ -66,18 +66,17 @@ public class WorldGen2 : MonoBehaviour {
     float GenMountans(){
         float noise = 0;
         for (int x = 0; x < mountanWidth; x++){
-            for (int y = hight; y < mountanHight; y++){ //y needs to be less then mountan hight
-                float xCoord = (float)x / mountanHight * mountanScale;
-                float yCoord = (float)y / mountanHight * mountanScale; //*3 so not extreem y pos
-                noise = yCoord * Mathf.PerlinNoise(xCoord + MountanSeed, 0.0f);
-                //print("mountan: "+noise);
-                if (noise > .4 && noise < .41){
-                    Vector3Int position = new Vector3Int(x, y, 0);
-                    Tilemap.SetTile(position, Dirttile);
-                }
-                if (noise < .4){
+            for (int y = hight; y < mountanHight; y++){
+                float xCoord = (float)x / mountanWidth * mountanScale;
+                float yCoord = (float)y / mountanHight * mountanScale;
+                noise = yCoord * Mathf.PerlinNoise(xCoord, 0f);
+                //print(noise * hight / mountanHight);
+                if (noise * hight / mountanHight < .5){
                     Vector3Int position = new Vector3Int(x, y, 0);
                     Tilemap.SetTile(position, Mountantile);
+                } if (noise * hight / mountanHight > .5 && noise * hight / mountanHight < .51){
+                    Vector3Int position = new Vector3Int(x, y, 0);
+                    Tilemap.SetTile(position, Dirttile);
                 }
             }
         }
@@ -98,7 +97,7 @@ public class WorldGen2 : MonoBehaviour {
                     }
                 } else {
                     //only spawn 10000 suface caves blocks
-                    if (currentSufaceCaveCount == 10000 && currentSufaceCaveCountCaves < 4) {
+                    if (currentSufaceCaveCount == 10000 && currentSufaceCaveCountCaves < 3) {
                         currentSufaceCaveCount = 0;
                         currentSufaceCaveCountCaves++;
                     }
