@@ -68,14 +68,14 @@ public class WorldGen2 : MonoBehaviour {
         for (int x = 0; x < mountanWidth; x++){
             for (int y = hight; y < mountanHight; y++){ //y needs to be less then mountan hight
                 float xCoord = (float)x / mountanHight * mountanScale;
-                float yCoord = (float)y / mountanHight * mountanScale * 1.4f; //*3 so not extreem y pos
+                float yCoord = (float)y / mountanHight * mountanScale; //*3 so not extreem y pos
                 noise = yCoord * Mathf.PerlinNoise(xCoord + MountanSeed, 0.0f);
                 //print("mountan: "+noise);
-                if (noise > 1.3 && noise < 1.4){
+                if (noise > .4 && noise < .41){
                     Vector3Int position = new Vector3Int(x, y, 0);
                     Tilemap.SetTile(position, Dirttile);
                 }
-                if (noise < 1.3){
+                if (noise < .4){
                     Vector3Int position = new Vector3Int(x, y, 0);
                     Tilemap.SetTile(position, Mountantile);
                 }
@@ -113,8 +113,8 @@ public class WorldGen2 : MonoBehaviour {
                             Tilemap.SetTile(position, emptyTile);
                         }
                         currentSufaceCaveCount++;
-                        print("1 "+currentSufaceCaveCount);
-                        print("2 "+currentSufaceCaveCountCaves);
+                        //print("1 "+currentSufaceCaveCount);
+                        //print("2 "+currentSufaceCaveCountCaves);
                     }
                     //dont spawn caves
                 }
