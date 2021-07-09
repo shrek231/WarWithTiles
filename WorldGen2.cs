@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using UnityEngine.Tilemaps;
 public class WorldGen2 : MonoBehaviour {
-    public int rand = 0;
+    private int rand = 0;
 
     public int seed = 225;
     public int scale = 5;
@@ -20,10 +20,15 @@ public class WorldGen2 : MonoBehaviour {
     public int mountanWidth = 60;
     public int mountanHight = 2000;
 
+    public int SufaceCaveSeed = 225;
+    public int SufaceCaveScale = 2;
+    public int SufaceCaveWidth = 60;
+    public int SufaceCaveHight = 2000;
+
     public int CaveScale = 15;
     public int CaveSeed = 225;
-    public int currentSufaceCaveCount = 0;
-    public int currentSufaceCaveCountCaves = 0;
+    private int currentSufaceCaveCount = 0;
+    private int currentSufaceCaveCountCaves = 0;
 
     public Tilemap Tilemap;
     public TileBase Irontile;
@@ -40,6 +45,7 @@ public class WorldGen2 : MonoBehaviour {
         GenGround();
         GenMountans();
         GenCaves();
+        GenSufaceCaves();
     }
     float GenGround(){
         float noise = 0;
@@ -73,12 +79,12 @@ public class WorldGen2 : MonoBehaviour {
             for (int y = hight; y < mountanHight; y++){
                 float xCoord = (float)x / mountanWidth * mountanScale;
                 float yCoord = (float)y / mountanHight * mountanScale;
-                noise = yCoord * Mathf.PerlinNoise(xCoord + MountanSeed, 0f);
-                //print(noise * hight / mountanHight);
-                if (noise * hight / mountanHight < .5){
+                //noise = yCoord * Mathf.PerlinNoise(xCoord + MountanSeed, 0f);
+                print(noise * hight / mountanHight);
+                if (noise * hight / mountanHight < .44){
                     Vector3Int position = new Vector3Int(x, y, 0);
                     Tilemap.SetTile(position, Mountantile);
-                } if (noise * hight / mountanHight > .5 && noise * hight / mountanHight < .51){
+                } if (noise * hight / mountanHight > .44 && noise * hight / mountanHight < .51){
                     Vector3Int position = new Vector3Int(x, y, 0);
                     Tilemap.SetTile(position, Dirttile);
                 }
@@ -100,33 +106,28 @@ public class WorldGen2 : MonoBehaviour {
                         Tilemap.SetTile(position, emptyTile);
                     }
                 } else {
-                    //only spawn 10000 suface caves blocks
-                    if (currentSufaceCaveCount == 10000 && currentSufaceCaveCountCaves < 3) {
-                        currentSufaceCaveCount = 0;
-                        currentSufaceCaveCountCaves++;
-                    }
-                    if (currentSufaceCaveCount < 1){
-                        Rand();
-                    }
-                    if (currentSufaceCaveCount != 10000 && rand == 2 && y > 1000){
-                        noise = Mathf.PerlinNoise(xCoord + 10 + CaveSeed, yCoord - 10);
-                        //print("ground: "+noise);
-                        Vector3Int position = new Vector3Int(x, y, 0);
-                        if (noise < .4){
-                            Tilemap.SetTile(position, emptyTile);
-                        }
-                        currentSufaceCaveCount++;
-                        //print("1 "+currentSufaceCaveCount);
-                        //print("2 "+currentSufaceCaveCountCaves);
-                    }
-                    //dont spawn caves
+                    //nothing
                 }
             }
         }
         return noise;
     }
-    void Rand(){
+    float GenSufaceCaves(){
+        float noise = 0;
+        for (int x = 0; x < width; x++){
+            for (int y = hight; y < hight; y--){
+                int x2 = x + UnityEngine.Random.Range(0, 20);
+                if (y > hight - 500){
+                    Vector3Int position = new Vector3Int(x2, y, 0);
+                    Tilemap.SetTile(position, emptyTile);
+                }
+            }
+        }
+        return noise;
+    }
+    int Rand(){
         rand = UnityEngine.Random.Range(0,width *15);
+        return rand;
     }
     void SpawnWater(){
         //use the GenCaves noise to gen water in caves
