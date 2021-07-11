@@ -4,8 +4,6 @@ using System;
 using System.IO;
 using UnityEngine.Tilemaps;
 public class WorldGen2 : MonoBehaviour {
-    private int rand = 0;
-
     public int seed = 225;
     public int scale = 5;
     public int width = 60;
@@ -45,7 +43,7 @@ public class WorldGen2 : MonoBehaviour {
         GenGround();
         GenMountans();
         GenCaves();
-        GenSufaceCaves();
+        GenSufaceCaves(1);
     }
     float GenGround(){
         float noise = 0;
@@ -80,7 +78,7 @@ public class WorldGen2 : MonoBehaviour {
                 float xCoord = (float)x / mountanWidth * mountanScale;
                 float yCoord = (float)y / mountanHight * mountanScale;
                 //noise = yCoord * Mathf.PerlinNoise(xCoord + MountanSeed, 0f);
-                print(noise * hight / mountanHight);
+                //print(noise * hight / mountanHight);
                 if (noise * hight / mountanHight < .44){
                     Vector3Int position = new Vector3Int(x, y, 0);
                     Tilemap.SetTile(position, Mountantile);
@@ -112,22 +110,21 @@ public class WorldGen2 : MonoBehaviour {
         }
         return noise;
     }
-    float GenSufaceCaves(){
+    float GenSufaceCaves(int x){
         float noise = 0;
-        for (int x = 0; x < width; x++){
-            for (int y = hight; y < hight; y--){
-                int x2 = x + UnityEngine.Random.Range(0, 20);
+        for (int y = hight; y > 0; y--){
+            for (int loop = 0; loop < 10; loop++){
+                int x2 = x + UnityEngine.Random.Range(5, 10);
+                int x3 = x + UnityEngine.Random.Range(0, 5);
                 if (y > hight - 500){
-                    Vector3Int position = new Vector3Int(x2, y, 0);
-                    Tilemap.SetTile(position, emptyTile);
+                    for (int x4; x2 > x3; x3++){ //x4 is unused
+                        Vector3Int position = new Vector3Int(x3, y, 0);
+                        Tilemap.SetTile(position, emptyTile);
+                    }
                 }
             }
         }
         return noise;
-    }
-    int Rand(){
-        rand = UnityEngine.Random.Range(0,width *15);
-        return rand;
     }
     void SpawnWater(){
         //use the GenCaves noise to gen water in caves
