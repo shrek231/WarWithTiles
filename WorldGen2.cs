@@ -43,7 +43,7 @@ public class WorldGen2 : MonoBehaviour {
         GenGround();
         GenMountans();
         GenCaves();
-        GenSufaceCaves(1);
+        GenSufaceCaves(50);
     }
     float GenGround(){
         float noise = 0;
@@ -114,8 +114,11 @@ public class WorldGen2 : MonoBehaviour {
         float noise = 0;
         for (int y = hight; y > 0; y--){
             for (int loop = 0; loop < 10; loop++){
-                int x2 = x + UnityEngine.Random.Range(5, 10);
-                int x3 = x + UnityEngine.Random.Range(0, 5);
+                int NegitiveRand = UnityEngine.Random.Range(-2, -8);
+                int SmallRand = UnityEngine.Random.Range(0, 3);
+                int HighRand = UnityEngine.Random.Range(5, 15);
+                int x2 = x + UnityEngine.Random.Range(SmallRand, HighRand);
+                int x3 = x + UnityEngine.Random.Range(NegitiveRand, SmallRand);
                 if (y > hight - 500){
                     for (int x4; x2 > x3; x3++){ //x4 is unused
                         Vector3Int position = new Vector3Int(x3, y, 0);
